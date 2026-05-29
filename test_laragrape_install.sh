@@ -9,9 +9,10 @@ echo "[1/6] Creating fresh Laravel project..."
 composer create-project laravel/laravel test-laragrape
 cd test-laragrape || exit 1
 
-# 2. Require the LaraGrape package from local path
+# 2. Require the LaraGrape package from local path (parent directory = package root)
 echo "[2/6] Requiring LaraGrape package from local path..."
-composer config repositories.laragrape-local path .
+PACKAGE_ROOT="$(cd .. && pwd)"
+composer config repositories.laragrape-local path "$PACKAGE_ROOT"
 composer require streats22/laragrape:dev-Development
 
 # 3. Run the setup command

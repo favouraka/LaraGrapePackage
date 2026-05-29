@@ -22,6 +22,7 @@ class LaraGrapeUpdateCommand extends Command
         {--console : Update console commands only}
         {--run-migrate : Run migrations after updating}
         {--run-seed : Run seeders after updating}
+        {--portfolio : Update optional portfolio CMS module}
         {--all : Update everything}';
     
     protected $description = 'Update LaraGrape components selectively';
@@ -121,7 +122,13 @@ class LaraGrapeUpdateCommand extends Command
             'description' => 'Artisan console commands and kernel',
             'tags' => ['LaraGrape-console-kernel'],
             'paths' => ['app/Console/']
-        ]
+        ],
+        'portfolio' => [
+            'name' => 'Portfolio CMS',
+            'description' => 'Optional portfolio projects module',
+            'tags' => ['LaraGrape-portfolio'],
+            'paths' => ['app/Models/PortfolioProject.php', 'app/Filament/Resources/PortfolioProjectResource.php', 'routes/portfolio.php'],
+        ],
     ];
 
     public function handle()

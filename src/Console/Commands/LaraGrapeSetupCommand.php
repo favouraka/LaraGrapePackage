@@ -15,6 +15,7 @@ class LaraGrapeSetupCommand extends Command
         {--publish-views : Only publish views}
         {--publish-migrations : Only publish migrations}
         {--publish-seeders : Only publish seeders}
+        {--portfolio : Publish optional portfolio CMS module}
         {--all : Publish everything, migrate, and seed}';
     protected $description = 'Setup LaraGrape: publish config, views, migrations, and optionally run migrations';
 
@@ -113,6 +114,21 @@ class LaraGrapeSetupCommand extends Command
         }
         
         $this->info("📊 Publishing summary: $successCount/$totalCount resources published successfully.");
+
+        if ($this->option('portfolio') || $this->option('all')) {
+            $this->info('📁 Publishing optional portfolio module...');
+            try {
+                $this->call('vendor:publish', [
+                    '--provider' => 'LaraGrape\\Providers\\LaraGrapeServiceProvider',
+                    '--tag' => 'LaraGrape-portfolio',
+                    '--force' => $force,
+                ]);
+                $this->info('✅ Portfolio module published. Set LARAGRAPE_PORTFOLIO=true in .env');
+            } catch (\Exception $e) {
+                $this->warn('⚠️  Portfolio publishing failed: '.$e->getMessage());
+            }
+        }
+
         // Publish CSS assets (site.css, app.css, filament-grapesjs-editor.css)
         $this->info('🎨 Publishing CSS assets...');
         try {

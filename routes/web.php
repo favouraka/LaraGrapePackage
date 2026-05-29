@@ -30,7 +30,11 @@ Route::post('/admin/pages/{page}/save-grapesjs', [AdminPageController::class, 's
     ->name('admin.page.save-grapesjs')
     ->middleware(['auth']);
 
-Route::get('/admin/block-preview/{blockId}', [AdminPageController::class, 'blockPreview'])->name('admin.block-preview')->middleware('auth');
+Route::get('/admin/block-preview/{blockId?}', [AdminPageController::class, 'blockPreview'])->name('admin.block-preview')->middleware('auth');
+
+if (file_exists(__DIR__.'/portfolio.php')) {
+    require __DIR__.'/portfolio.php';
+}
 
 // Debug route for testing GrapesJS data flow
 Route::get('/debug/grapesjs-data/{page}', function ($page) {
