@@ -5,6 +5,7 @@ namespace LaraGrape\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class SiteSettings extends Model
 {
@@ -44,9 +45,14 @@ class SiteSettings extends Model
     {
         $setting = static::firstOrNew(['key' => $key]);
         $setting->value = $value;
+        if (!$setting->label) {
+            $setting->label = Str::title(str_replace(['_', '-'], ' ', $key));
+        }
         $setting->save();
-        
+
+        // Bust both individual and service-level caches
         Cache::forget("site_setting_{$key}");
+        static::clearCache();
     }
 
     /**

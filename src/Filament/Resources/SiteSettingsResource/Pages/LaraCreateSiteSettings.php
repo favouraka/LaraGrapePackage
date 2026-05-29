@@ -29,7 +29,7 @@ class LaraCreateSiteSettings extends CreateRecord
             }
         }
 
-        $data['value'] = json_encode($valueData);
+        $data['value'] = $valueData;
 
         return $data;
     }

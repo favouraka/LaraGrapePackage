@@ -55,7 +55,7 @@ class LaraEditSiteSettings extends EditRecord
             }
         }
 
-        $data['value'] = json_encode($valueData);
+        $data['value'] = $valueData;
 
         return $data;
     }

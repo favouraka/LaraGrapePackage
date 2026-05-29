@@ -24,13 +24,24 @@ class SiteSettingsService
             return;
         }
 
-        $this->settings = Cache::remember('site_settings_all', 3600, function () {
+        // Cache with no TTL — clearCache() busts it explicitly on every save
+        $this->settings = Cache::remember('site_settings_all', 0, function () {
             return SiteSettings::orderBy('group')
                 ->orderBy('sort_order')
                 ->get()
                 ->keyBy('key')
                 ->map(function ($setting) {
-                    return $setting->value;
+                    $value = $setting->value;
+
+                    // Handle double-encoded JSON (legacy data from previous json_encode bug)
+                    if (is_string($value) && str_starts_with($value, '{')) {
+                        $decoded = json_decode($value, true);
+                        if (is_array($decoded)) {
+                            return $decoded;
+                        }
+                    }
+
+                    return $value;
                 })
                 ->toArray();
         });
@@ -43,7 +54,19 @@ class SiteSettingsService
      */
     public function get(string $key, $default = null)
     {
-        return $this->settings[$key] ?? $default;
+        // First try direct key lookup (standalone setting)
+        if (array_key_exists($key, $this->settings)) {
+            return $this->settings[$key];
+        }
+
+        // Fallback: scan all JSON/composite settings for the key
+        foreach ($this->settings as $settingKey => $value) {
+            if (is_array($value) && array_key_exists($key, $value) && $value[$key] !== null) {
+                return $value[$key];
+            }
+        }
+
+        return $default;
     }
 
     /**
