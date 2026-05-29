@@ -12,7 +12,7 @@
         </div>
         
         <div class="form-content w-full">
-            {!! app(\LaraGrape\Services\FormService::class)->generateFormHtml($form) !!}
+            {!! app(class_exists(\App\Services\FormService::class) ? \App\Services\FormService::class : \LaraGrape\Services\FormService::class)->generateFormHtml($form) !!}
         </div>
     </div>
 </div>

@@ -62,7 +62,7 @@
                         <div class="p-5 flex-1 flex flex-col">
                             <h3 class="mb-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">{{ $p->title }}</h3>
                             <p class="mb-4 flex-1 text-sm text-zinc-600 dark:text-zinc-300">{{ \Illuminate\Support\Str::limit($p->excerpt ?? '', 140) }}</p>
-                            <a href="{{ route('portfolio.show', $p->slug) }}" class="text-accent font-semibold text-sm hover:underline mt-auto">
+                            <a href="{{ $p->publicUrl() }}" class="text-accent font-semibold text-sm hover:underline mt-auto">
                                 Show more →
                             </a>
                         </div>

@@ -26,7 +26,13 @@ class LaraGrapeServiceProvider extends ServiceProvider
         $packageDir = dirname(__DIR__, 2);
         $this->loadViewsFrom($packageDir.'/resources/views', 'LaraGrape');
 
-        $this->app->singleton(\LaraGrape\Services\FormService::class);
+        $this->app->singleton(\LaraGrape\Services\FormService::class, function ($app) {
+            if (class_exists(\App\Services\FormService::class)) {
+                return $app->make(\App\Services\FormService::class);
+            }
+
+            return new \LaraGrape\Services\FormService;
+        });
         $this->app->singleton(\LaraGrape\Services\LayoutService::class);
         $this->app->singleton(\LaraGrape\Support\TechStackRegistry::class);
         $this->app->singleton(\LaraGrape\Services\DynamicBlockDataService::class);
@@ -138,6 +144,7 @@ class LaraGrapeServiceProvider extends ServiceProvider
             $this->publishes([
                 $packageDir.'/resources/js/grapesjs-editor.js' => resource_path('js/grapesjs-editor.js'),
                 $packageDir.'/resources/js/form-blocks.js' => resource_path('js/form-blocks.js'),
+                $packageDir.'/resources/js/bootstrap.js' => resource_path('js/bootstrap.js'),
             ], 'LaraGrape-js');
             // Publish Filament admin theme CSS
             $this->publishes([

@@ -348,17 +348,20 @@ class LaraGrapeUpdateCommand extends Command
     private function postProcessControllers(): void
     {
         $controllersPath = base_path('app/Http/Controllers');
-        if (is_dir($controllersPath)) {
-            foreach (glob($controllersPath . '/*.php') as $controllerFile) {
-                if (file_exists($controllerFile)) {
-                    $contents = file_get_contents($controllerFile);
-                    $contents = str_replace('namespace LaraGrape\\Http\\Controllers;', 'namespace App\\Http\\Controllers;', $contents);
-                    $contents = str_replace('use LaraGrape\\Models\\', 'use App\\Models\\', $contents);
-                    $contents = str_replace('use LaraGrape\\Services\\', 'use App\\Services\\', $contents);
-                    $contents = preg_replace('/class Lara([A-Z][A-Za-z0-9_]*)/', 'class $1', $contents);
-                    file_put_contents($controllerFile, $contents);
-                }
+        if (! is_dir($controllersPath)) {
+            return;
+        }
+
+        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($controllersPath));
+        foreach ($rii as $file) {
+            if (! $file->isFile() || $file->getExtension() !== 'php') {
+                continue;
             }
+            $contents = file_get_contents($file->getPathname());
+            $contents = str_replace('namespace LaraGrape\\Http\\Controllers;', 'namespace App\\Http\\Controllers;', $contents);
+            $contents = str_replace('use LaraGrape\\', 'use App\\', $contents);
+            $contents = preg_replace('/class Lara([A-Z][A-Za-z0-9_]*)/', 'class $1', $contents);
+            file_put_contents($file->getPathname(), $contents);
         }
     }
     

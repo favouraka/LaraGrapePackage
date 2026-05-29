@@ -71,6 +71,19 @@ class PortfolioProject extends Model
      *
      * @return array<int, mixed>
      */
+    /**
+     * Public detail URL when portfolio routes are enabled.
+     */
+    public function publicUrl(): string
+    {
+        if (config('laragrape.portfolio_enabled', false)
+            && \Illuminate\Support\Facades\Route::has('portfolio.show')) {
+            return route('portfolio.show', $this->slug);
+        }
+
+        return '#';
+    }
+
     public function tagsArray(): array
     {
         $tags = $this->tags;

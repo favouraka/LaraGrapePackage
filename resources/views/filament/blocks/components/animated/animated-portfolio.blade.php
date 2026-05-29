@@ -61,7 +61,10 @@
             && collect($dynamicData['project_slot_ids'])->filter(fn ($v) => $v !== null && trim((string) $v) !== '')->isNotEmpty()
         );
 
-    $portfolioRows = \LaraGrape\Models\PortfolioProject::queryForAnimatedPortfolioBlock($dynamicData);
+    $portfolioModel = class_exists(\App\Models\PortfolioProject::class)
+        ? \App\Models\PortfolioProject::class
+        : \LaraGrape\Models\PortfolioProject::class;
+    $portfolioRows = $portfolioModel::queryForAnimatedPortfolioBlock($dynamicData);
 
     $defaultProjects = [];
     foreach ($portfolioRows as $i => $p) {
@@ -69,7 +72,7 @@
             'title' => $p->title,
             'description' => \Illuminate\Support\Str::limit((string) ($p->excerpt ?? ''), 200),
             'tags' => array_values(array_slice($p->tagsArray(), 0, 4)),
-            'link' => route('portfolio.show', $p->slug),
+            'link' => $p->publicUrl(),
             'image_url' => $p->featured_image ? \Illuminate\Support\Facades\Storage::url($p->featured_image) : null,
             'visible' => false,
             'delay' => $i * 150,

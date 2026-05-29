@@ -54,7 +54,7 @@
                                     @endforeach
                                 </div>
                             @endif
-                            <a href="{{ route('portfolio.show', $p->slug) }}" class="text-accent font-semibold hover:underline mt-auto">
+                            <a href="{{ $p->publicUrl() }}" class="text-accent font-semibold hover:underline mt-auto">
                                 View project →
                             </a>
                         </div>

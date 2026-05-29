@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use LaraGrape\Http\Controllers\AdminPortfolioProjectController;
-use LaraGrape\Http\Controllers\PortfolioProjectController;
+use App\Http\Controllers\AdminPortfolioProjectController;
+use App\Http\Controllers\PortfolioProjectController;
 
 if (! config('laragrape.portfolio_enabled', false)) {
     return;

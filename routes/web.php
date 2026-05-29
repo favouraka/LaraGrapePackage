@@ -1,10 +1,10 @@
 <?php
 
-use LaraGrape\Http\Controllers\PageController;
-use LaraGrape\Http\Controllers\FormController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
-use LaraGrape\Http\Controllers\AdminPageController;
-use LaraGrape\Models\Page;
+use App\Http\Controllers\AdminPageController;
+use App\Models\Page;
 
 // Homepage
 Route::get('/', [PageController::class, 'home'])->name('home');
